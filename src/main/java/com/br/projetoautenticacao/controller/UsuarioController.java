@@ -2,17 +2,11 @@ package com.br.projetoautenticacao.controller;
 
 
 import com.br.projetoautenticacao.dto.AuthenticationDTO;
-import com.br.projetoautenticacao.dto.LoginResponseDTO;
 import com.br.projetoautenticacao.dto.UsuarioRequestDTO;
 import com.br.projetoautenticacao.dto.UsuarioResponseDTO;
-import com.br.projetoautenticacao.entity.Usuario;
-import com.br.projetoautenticacao.service.TokenService;
 import com.br.projetoautenticacao.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,20 +18,9 @@ public class UsuarioController {
     @Autowired
     UsuarioService usuarioService;
 
-    @Autowired
-    private TokenService tokenService;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
     @PostMapping("/auth")
     public ResponseEntity login(@RequestBody AuthenticationDTO dto) {
-        var userNamePassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.senha());
-        var auth = this.authenticationManager.authenticate(userNamePassword);
-
-        var token = tokenService.generateToken((Usuario) auth.getPrincipal());
-
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+      return ResponseEntity.ok(usuarioService.validarUsuario(dto));
     }
 
     @GetMapping("/usuario")
