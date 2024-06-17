@@ -6,6 +6,7 @@ import com.br.projetoautenticacao.entity.Usuario;
 import com.br.projetoautenticacao.repository.UsuarioRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class UsuarioService {
     @Autowired
     UsuarioRepository usuarioRepository;
 
-//    private BCryptPasswordEncoder enconder = new BCryptPasswordEncoder();
+    private BCryptPasswordEncoder enconder = new BCryptPasswordEncoder();
 
 
     private ModelMapper mapper = new ModelMapper();
@@ -34,7 +35,7 @@ public class UsuarioService {
         return new UsuarioResponseDTO(usuarioRepository.save(Usuario.builder()
                 .nome(dto.getNome())
                 .email(dto.getEmail())
-                .senha(dto.getSenha())
+                .senha(enconder.encode(dto.getSenha()))
                 .build()));
     }
 
